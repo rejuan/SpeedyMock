@@ -1,8 +1,12 @@
 [
   {
     "path": "hello",
-    "response": "{\"status\": true}",
-    "header": "",
-    "delay": 5
+    "response": {
+      "status": true
+    },
+    "header": {
+      "Cache-Control": "no-cache"
+    },
+    "delay": 300
   }
 ]
