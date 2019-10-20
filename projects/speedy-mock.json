@@ -1,0 +1,8 @@
+[
+  {
+    "path": "hello",
+    "response": "{\"status\": true}",
+    "header": "",
+    "delay": 5
+  }
+]
