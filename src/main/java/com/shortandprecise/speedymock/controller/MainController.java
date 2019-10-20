@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shortandprecise.speedymock.model.Project;
 import com.shortandprecise.speedymock.util.Constant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,12 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMapping;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.Objects;
 
+@Slf4j
 @Controller
 public class MainController {
 
@@ -25,6 +28,8 @@ public class MainController {
 
 	@RequestMapping(value = "**")
 	public Mono<ResponseEntity> index(ServerHttpRequest request) throws JsonProcessingException {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 		Project project = Constant.PROJECT_MAP.get(request.getURI().getPath().substring(1));
 		ResponseEntity responseEntity;
 		long delay = 0;
@@ -42,6 +47,8 @@ public class MainController {
 			responseEntity = ResponseEntity.notFound().build();
 		}
 
+		stopWatch.stop();
+		log.info("total processing time {} ms", stopWatch.getTotalTimeMillis());
 		return Mono.just(responseEntity).delaySubscription(Duration.ofMillis(delay));
 	}
 }
